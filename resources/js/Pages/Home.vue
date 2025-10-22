@@ -17,8 +17,16 @@ const form = useForm({
     search: props.searchTerm,
 });
 
+const username = params.user_id ? props.listings.data.find(i=>i.user_id === Number(params.user_id)).user.name : null;
+
+
 const search = () =>{
-    router.get(route('home'),{search: form.search, user_id: params.user_id});
+    router.get(route('home'),{
+        search: form.search,
+        user_id: params.user_id,
+        tag: params.tag,
+
+    });
 };
 </script>
 
@@ -28,8 +36,28 @@ const search = () =>{
     <SessionMessages :deleteStatus="deleteStatus" />
 
     <div class="flex items-center justify-between mb-4">
-            <div>
-                filters
+            <div class="flex items-center gap-2">
+                <Link
+                class="flex items-center gap-2 px-2 py-1 text-white bg-indigo-500 rounded-md px-"
+                v-if="params.tag" :href="route('home',{...params, tag: null, page:null})"
+                >
+                    {{ params.tag }}
+                <i class="fa-solid fa-xmark"></i>
+                </Link>
+                <Link
+                class="flex items-center gap-2 px-2 py-1 text-white bg-indigo-500 rounded-md px-"
+                v-if="params.search" :href="route('home',{...params, search: null, page:null})"
+                >
+                    {{ params.search }}
+                <i class="fa-solid fa-xmark"></i>
+                </Link>
+                <Link
+                class="flex items-center gap-2 px-2 py-1 text-white bg-indigo-500 rounded-md px-"
+                v-if="params.user_id" :href="route('home',{...params, user_id: null, page:null})"
+                >
+                    {{ username }}
+                <i class="fa-solid fa-xmark"></i>
+                </Link>
             </div>
             <div class="w-1/4">
                 <form @submit.prevent="search">
